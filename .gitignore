@@ -1,0 +1,17 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Editor / temp / backup
+*.bak.*
+*.swp
+*.tmp
+
+# Local data + old backups
+data/
+old_app_backup_*/
+*.db
+
+# Local config & secrets
+config.yaml
+.env
