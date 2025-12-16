@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Andromeda – Insights</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #020513;
+      --panel: rgba(5, 10, 40, 0.98);
+      --border: #3a4a7a;
+      --text: #e5ecff;
+      --muted: #9aa3c7;
+      --accent: #58c2ff;
+      --warn: #ff5c7a;
+      --info: #58c2ff;
+      --ok: #50ffbe;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 32px 16px;
+      font-family: system-ui, -apple-system, "SF Pro Text", sans-serif;
+      background: radial-gradient(circle at top, #14182b, #050712 55%, #010109);
+      color: var(--text);
+    }
+
+    .shell {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 24px 28px 28px;
+      background: var(--panel);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.7);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 20px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(120, 150, 220, 0.5);
+      background: rgba(6, 18, 60, 0.8);
+      color: var(--accent);
+    }
+
+    .pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-right: 6px;
+      background: #3dffb4;
+      box-shadow: 0 0 8px #3dffb4;
+    }
+
+    .insights-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .empty {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .insight {
+      padding: 14px 16px 12px;
+      border-radius: 12px;
+      background: radial-gradient(circle at top left, rgba(120, 140, 255, 0.12), rgba(8, 12, 42, 0.95));
+      border-left: 3px solid var(--info);
+      border-right: 1px solid rgba(130, 150, 220, 0.3);
+    }
+
+    .insight--warning {
+      border-left-color: var(--warn);
+    }
+
+    .insight--critical {
+      border-left-color: var(--warn);
+      box-shadow: 0 0 24px rgba(255, 92, 122, 0.4);
+    }
+
+    .insight-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .insight-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .severity {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .severity--warning {
+      color: var(--warn);
+      border-color: rgba(255, 92, 122, 0.6);
+    }
+
+    .severity--info {
+      color: var(--accent);
+      border-color: rgba(88, 194, 255, 0.6);
+    }
+
+    .severity--critical {
+      color: #ffb347;
+      border-color: rgba(255, 179, 71, 0.7);
+    }
+
+    .summary {
+      margin: 0 0 6px;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .meta {
+      margin: 0 0 6px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .meta strong {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .evidence {
+      margin: 0;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .evidence span {
+      margin-right: 10px;
+    }
+
+    .actions {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .action-chip {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(160, 190, 255, 0.6);
+      background: rgba(8, 18, 70, 0.9);
+      cursor: default;
+    }
+
+    .footer-note {
+      margin-top: 12px;
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div>
+        <h1>ANDROMEDA – INSIGHTS</h1>
+        <p class="subtitle">Recent signals from the home mesh core</p>
+      </div>
+      <div class="pill">
+        <span class="pill-dot"></span>
+        LIVE LINK
+      </div>
+    </header>
+
+    <section id="insights-list" class="insights-list">
+      <p class="empty">Loading latest insights from the core…</p>
+    </section>
+
+    <div class="footer-note">Source: /api/insights on andromeda-pi</div>
+  </main>
+
+  <script>
+    function formatTimestamp(ts) {
+      if (!ts) return 'unknown';
+      const tsMs = ts > 1e12 ? ts : ts * 1000;  // handle seconds or ms
+      const d = new Date(tsMs);
+      if (isNaN(d.getTime())) return 'invalid';
+      return d.toLocaleString();
+    }
+
+    function createInsightCard(item) {
+      const div = document.createElement('article');
+      div.className = 'insight';
+
+      const severity = (item.severity || 'info').toLowerCase();
+      if (severity === 'warning') div.classList.add('insight--warning');
+      if (severity === 'critical') div.classList.add('insight--critical');
+
+      const header = document.createElement('div');
+      header.className = 'insight-header';
+
+      const title = document.createElement('h2');
+      title.className = 'insight-title';
+      title.textContent = item.title || 'Insight';
+
+      const sevBadge = document.createElement('span');
+      sevBadge.className = 'severity severity--' + (severity === 'warning' || severity === 'critical' ? severity : 'info');
+      sevBadge.textContent = severity;
+
+      header.appendChild(title);
+      header.appendChild(sevBadge);
+      div.appendChild(header);
+
+      if (item.summary) {
+        const p = document.createElement('p');
+        p.className = 'summary';
+        p.textContent = item.summary;
+        div.appendChild(p);
+      }
+
+      const meta = document.createElement('p');
+      meta.className = 'meta';
+      const ts = formatTimestamp(item.ts);
+      const conf = typeof item.confidence === 'number'
+        ? (item.confidence * 100).toFixed(1) + '%'
+        : 'n/a';
+      meta.innerHTML = '<strong>' + (item.source || 'core') +
+        '</strong> · ' + ts + ' · confidence ' + conf;
+      div.appendChild(meta);
+
+      // Evidence
+      if (item.evidence && typeof item.evidence === 'object' && Object.keys(item.evidence).length) {
+        const ev = document.createElement('p');
+        ev.className = 'evidence';
+        const parts = [];
+        for (const [k, v] of Object.entries(item.evidence)) {
+          parts.push(k + ': ' + v);
+        }
+        ev.textContent = 'Evidence — ' + parts.join(' · ');
+        div.appendChild(ev);
+      }
+
+      // Actions
+      if (Array.isArray(item.recommended_actions) && item.recommended_actions.length) {
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'actions';
+        item.recommended_actions.forEach(a => {
+          const chip = document.createElement('span');
+          chip.className = 'action-chip';
+          chip.textContent = a.label || a.action || 'Action';
+          actionsDiv.appendChild(chip);
+        });
+        div.appendChild(actionsDiv);
+      }
+
+      return div;
+    }
+
+    async function loadInsights() {
+      const list = document.getElementById('insights-list');
+      list.innerHTML = '<p class="empty">Loading latest insights from the core…</p>';
+
+      try {
+        const res = await fetch('/api/insights?limit=10');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        const items = Array.isArray(data.items) ? data.items : [];
+
+        list.innerHTML = '';
+
+        if (!items.length) {
+          list.innerHTML = '<p class="empty">No insights yet. Standing by…</p>';
+          return;
+        }
+
+        items.forEach(item => {
+          list.appendChild(createInsightCard(item));
+        });
+      } catch (err) {
+        list.innerHTML = '<p class="empty">Error loading insights: ' + err + '</p>';
+      }
+    }
+
+    window.addEventListener('load', loadInsights);
+  </script>
+</body>
+</html>
