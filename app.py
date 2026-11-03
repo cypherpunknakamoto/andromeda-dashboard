@@ -1,9 +1,10 @@
 import json
+import os
 import sqlite3
 import time
 from pathlib import Path
 
-from fastapi import FastAPI, Body
+from fastapi import FastAPI, Body, Query
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -11,7 +12,7 @@ app = FastAPI(title="Andromeda Dashboard")
 
 BASE_DIR = Path(__file__).parent
 STATIC_DIR = BASE_DIR / "static"
-DB_PATH = Path("/var/lib/andromeda/insights.db")
+DB_PATH = Path(os.environ.get("ANDROMEDA_DB_PATH", "/var/lib/andromeda/insights.db"))
 
 # Make sure folders exist
 STATIC_DIR.mkdir(exist_ok=True)
@@ -139,7 +140,7 @@ def add_insight(payload: dict = Body(...)):
 
 
 @app.get("/api/insights")
-def list_insights(limit: int = 20):
+def list_insights(limit: int = Query(default=20, ge=1, le=100)):
     """
     Return most recent insights, newest first.
     """
@@ -159,3 +160,4 @@ def list_insights(limit: int = 20):
 
     items = [row_to_insight(r) for r in rows]
     return {"items": items}
+
