@@ -263,8 +263,9 @@
       const conf = typeof item.confidence === 'number'
         ? (item.confidence * 100).toFixed(1) + '%'
         : 'n/a';
-      meta.innerHTML = '<strong>' + (item.source || 'core') +
-        '</strong> · ' + ts + ' · confidence ' + conf;
+      const source = document.createElement('strong');
+      source.textContent = item.source || 'core';
+      meta.append(source, document.createTextNode(' · ' + ts + ' · confidence ' + conf));
       div.appendChild(meta);
 
       // Evidence
@@ -316,7 +317,11 @@
           list.appendChild(createInsightCard(item));
         });
       } catch (err) {
-        list.innerHTML = '<p class="empty">Error loading insights: ' + err + '</p>';
+        list.replaceChildren();
+        const error = document.createElement('p');
+        error.className = 'empty';
+        error.textContent = 'Error loading insights: ' + err;
+        list.appendChild(error);
       }
     }
 
@@ -324,3 +329,4 @@
   </script>
 </body>
 </html>
+

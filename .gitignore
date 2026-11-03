@@ -15,3 +15,10 @@ old_app_backup_*/
 # Local config & secrets
 config.yaml
 .env
+
+# Local environments and tool caches
+.venv/
+.ruff_cache/
+coverage.json
+.coverage
+
