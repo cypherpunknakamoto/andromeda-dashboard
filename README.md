@@ -1,6 +1,7 @@
 # Andromeda Dashboard
 
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/cypherpunknakamoto/andromeda-dashboard/badge)](https://scorecard.dev/viewer/?uri=github.com/cypherpunknakamoto/andromeda-dashboard)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/16306/badge)](https://www.bestpractices.dev/projects/16306)
 
 A small, local-first dashboard for recording and viewing signals from a home mesh.
 FastAPI serves a read-only insights page and an API backed by a local SQLite file.
@@ -18,7 +19,7 @@ git clone https://github.com/cypherpunknakamoto/andromeda-dashboard.git
 cd andromeda-dashboard
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r requirements.txt
+python -m pip install --require-hashes -r requirements.txt
 mkdir -p data
 export ANDROMEDA_DB_PATH="$PWD/data/insights.db"
 python -m uvicorn app:app --host 127.0.0.1 --port 8000
@@ -30,7 +31,7 @@ git clone https://github.com/cypherpunknakamoto/andromeda-dashboard.git
 cd andromeda-dashboard
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install -r requirements.txt
+python -m pip install --require-hashes -r requirements.txt
 mkdir -p data
 export ANDROMEDA_DB_PATH="$PWD/data/insights.db"
 python -m uvicorn app:app --host 127.0.0.1 --port 8000
@@ -78,14 +79,14 @@ for this loopback-only check.
 
 [Mac]
 ```sh
-python -m pip install -r requirements-dev.txt
+python -m pip install --require-hashes -r requirements-dev.txt
 python -m ruff check .
 python -m unittest discover -s tests -v
 ```
 
 [Pi]
 ```sh
-python -m pip install -r requirements-dev.txt
+python -m pip install --require-hashes -r requirements-dev.txt
 python -m ruff check .
 python -m unittest discover -s tests -v
 ```
@@ -93,9 +94,12 @@ python -m unittest discover -s tests -v
 Tests use a disposable database, covering health, HTML delivery, JSON round trips,
 ordering and limits, record replacement, and parameterized SQL handling.
 Tests and lint also run in GitHub Actions. CodeQL scans Python separately.
-Dependency versions are recorded in requirements and constraints files;
-Dependabot proposes weekly Python and GitHub Actions updates. Review updates,
-update all affected pins together, and run tests before merging.
+Dependency versions and package hashes are recorded in generated requirements
+files, with tested version constraints retained in constraints.txt. Direct inputs
+are requirements.in and requirements-dev.in. Dependabot proposes weekly Python
+and GitHub Actions updates. Review updates, regenerate both hashed requirements
+files, and run tests before merging. Maintainers can regenerate them using
+pip-tools 7.6.2 in a separate development environment.
 
 ## Security and deployment boundary
 
