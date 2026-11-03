@@ -18,14 +18,14 @@ private insight records. Follow SECURITY.md for security reports.
 
 [Mac]
 ```sh
-python -m pip install -r requirements-dev.txt
+python -m pip install --require-hashes -r requirements-dev.txt
 python -m ruff check .
 python -m unittest discover -s tests -v
 ```
 
 [Pi]
 ```sh
-python -m pip install -r requirements-dev.txt
+python -m pip install --require-hashes -r requirements-dev.txt
 python -m ruff check .
 python -m unittest discover -s tests -v
 ```
@@ -33,7 +33,9 @@ python -m unittest discover -s tests -v
 CI runs tests and lint; CodeQL checks Python for security findings. Workflow actions
 are pinned to complete commit hashes and use limited token permissions. Do not
 add untrusted pull request code to privileged workflows. When updating dependencies,
-keep constraints.txt and requirements files consistent and rerun the checks.
+keep constraints.txt, requirements.in, and requirements-dev.in consistent. Use
+pip-tools 7.6.2 to regenerate both requirements files with --generate-hashes, then
+install with --require-hashes and rerun the checks. Do not hand-edit generated hashes.
 
 Main uses pull requests, blocks force pushes and deletion, and requires resolution
 of review conversations. This is currently a sole-maintainer project; a second
